@@ -93,30 +93,30 @@ def encrypt(plaintext, key):
     round_keys = key_expansion(key)
     state = int_to_state(plaintext)
     state = add_round_key(state, round_keys[0])
-    print(f"After initial AddRoundKey: {state_to_int(state):04x}")
+    log = [f"After initial AddRoundKey: {state_to_int(state):04x}"]
     for r in range(1, 4):
         state = sub_nibbles(state, Sbox)
         state = shift_rows(state)
         if r != 3:
             state = mix_columns(state)
         state = add_round_key(state, round_keys[r])
-        print(f"Round {r} output: {state_to_int(state):04x}")
-    return state_to_int(state)
+        log.append(f"Round {r} output: {state_to_int(state):04x}")
+    return state_to_int(state), log
 
 # Dekripsi mini AES
 def decrypt(ciphertext, key):
     round_keys = key_expansion(key)
     state = int_to_state(ciphertext)
     state = add_round_key(state, round_keys[3])
-    print(f"After initial AddRoundKey (K3): {state_to_int(state):04x}")
+    log = [f"After initial AddRoundKey (K3): {state_to_int(state):04x}"]
     for r in range(3, 0, -1):
         state = shift_rows(state)
         state = sub_nibbles(state, InvSbox)
         state = add_round_key(state, round_keys[r-1])
         if r != 1:
             state = inverse_mix_columns(state)
-        print(f"Round {4 - r} decryption step: {state_to_int(state):04x}")
-    return state_to_int(state)
+        log.append(f"Round {4 - r} decryption step: {state_to_int(state):04x}")
+    return state_to_int(state), log
 
 # GUI dengan Tkinter
 class MiniAESApp:
@@ -157,9 +157,13 @@ class MiniAESApp:
         try:
             plaintext = int(self.plaintext_entry.get(), 16)
             key = int(self.key_entry.get(), 16)
-            ciphertext = encrypt(plaintext, key)
+            ciphertext, logs = encrypt(plaintext, key)
             self.ciphertext_entry.delete(0, tk.END)
             self.ciphertext_entry.insert(0, f"{ciphertext:04x}")
+
+            for log in logs :
+                self.log.insert(tk.END, log + '\n')
+
             self.log.insert(tk.END, f"Encrypted: {plaintext:04x} -> {ciphertext:04x}\n")
         except ValueError:
             self.log.insert(tk.END, "Error: Invalid input (use hex digits)\n")
@@ -168,9 +172,13 @@ class MiniAESApp:
         try:
             ciphertext = int(self.ciphertext_entry.get(), 16)
             key = int(self.key_entry.get(), 16)
-            plaintext = decrypt(ciphertext, key)
+            plaintext, logs = decrypt(ciphertext, key)
             self.plaintext_entry.delete(0, tk.END)
             self.plaintext_entry.insert(0, f"{plaintext:04x}")
+
+            for log in logs :
+                self.log.insert(tk.END, log + '\n')
+
             self.log.insert(tk.END, f"Decrypted: {ciphertext:04x} -> {plaintext:04x}\n")
         except ValueError:
             self.log.insert(tk.END, "Error: Invalid input (use hex digits)\n")
