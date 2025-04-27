@@ -1,6 +1,7 @@
 # library buat GUI
 import tkinter as tk
 from tkinter import ttk
+from tkinter import filedialog, messagebox
 
 # s-box dan inverse s-box untuk subtitusi
 Sbox = [
@@ -118,6 +119,11 @@ def decrypt(ciphertext, key):
         log.append(f"Round {4 - r} decryption step: {state_to_int(state):04x}")
     return state_to_int(state), log
 
+def save_to_file(filename, data):
+    with open(filename, 'w') as f:
+        for line in data:
+            f.write(line + '\n')
+
 # GUI dengan Tkinter
 class MiniAESApp:
     def __init__(self, root):
@@ -135,8 +141,10 @@ class MiniAESApp:
         
         self.encrypt_button = ttk.Button(root, text="Encrypt", command=self.encrypt)
         self.decrypt_button = ttk.Button(root, text="Decrypt", command=self.decrypt)
+        self.export_btn = tk.Button(root, text="Export Log", command=self.export_log)
         
-        self.log = tk.Text(root, height=10, width=50)
+        
+        self.log = tk.Text(root, height=15, width=50)
         
         # layout GUI
         self.plaintext_label.grid(row=0, column=0, padx=5, pady=5)
@@ -149,7 +157,8 @@ class MiniAESApp:
         self.key_entry.grid(row=2, column=1, padx=5, pady=5)
         
         self.encrypt_button.grid(row=3, column=0, padx=5, pady=5)
-        self.decrypt_button.grid(row=3, column=1, padx=5, pady=5)
+        self.export_btn.grid(row=3, column=1)
+        self.decrypt_button.grid(row=3, column=2, padx=5, pady=5)
         
         self.log.grid(row=4, column=0, columnspan=2, padx=5, pady=5)
     
@@ -182,6 +191,13 @@ class MiniAESApp:
             self.log.insert(tk.END, f"Decrypted: {ciphertext:04x} -> {plaintext:04x}\n")
         except ValueError:
             self.log.insert(tk.END, "Error: Invalid input (use hex digits)\n")
+
+    def export_log(self):
+        filename = filedialog.asksaveasfilename(defaultextension=".txt")
+        if filename:
+            data = self.log.get('1.0', tk.END).splitlines()
+            save_to_file(filename, data)
+            messagebox.showinfo("Success", f"Log saved to {filename}")
 
 # start GUI
 if __name__ == "__main__":
