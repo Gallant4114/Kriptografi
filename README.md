@@ -58,6 +58,22 @@ FOR 1..3:
   
 Output Ciphertext
 
+![image](https://github.com/user-attachments/assets/cbbac05a-41e2-47ce-ab85-f1ffa8a5e2b9)
+
+![image](https://github.com/user-attachments/assets/8f945588-046b-450c-bb83-006d0989957f)
+
+![image](https://github.com/user-attachments/assets/0b418157-c8f4-412f-8c2f-6fc07b588646)
+
+
+**Flowchart Dekripsi:**
+
+![image](https://github.com/user-attachments/assets/f6b79baf-4cc0-4e7f-807f-3905439f7ca8)
+
+![image](https://github.com/user-attachments/assets/5b006ea8-cb81-421b-a942-f5d2cf7da726)
+
+![image](https://github.com/user-attachments/assets/e91e6ab4-2f62-4bc7-bd5f-363c4cba9a8e)
+
+
 **Flowchart Key Expansion:**
 Input 16-bit Key
 
@@ -76,6 +92,13 @@ FOR setiap round:
   ↓
   
 Output Round Keys
+
+![image](https://github.com/user-attachments/assets/5d01e631-64d0-4d8a-b1d0-d6b0eb7f9850)
+
+![image](https://github.com/user-attachments/assets/832315fc-6ff1-4673-b704-f0074f4caa81)
+
+![image](https://github.com/user-attachments/assets/e83cc1ab-8ad1-4813-b932-665b0aadc463)
+
 
 ### C. Implementasi program
 - Program ini ditulis dengan bahasa Python
@@ -103,6 +126,23 @@ Enkripsi dengan CBC
 Dekripsi dengan CBC
 
 ![Screenshot 2025-04-27 235552](https://github.com/user-attachments/assets/2f01e8d1-4202-4088-b691-afbfc8487db6)
+
+**Test Case Avalanche**
+
+Menggunakan Sample Key yang sama yaitu 1A2B dengan Plaintext 1(0123) dan Plaintext 2(0122) yang hanya memiliki perbedaan 1 bit, memberikan hasil yang berbeda sesuai dengan Avalanche Test
+![image](https://github.com/user-attachments/assets/f211e432-4c08-4543-8261-8bd5916f6e21)
+
+![image](https://github.com/user-attachments/assets/1e2943c8-3b69-4008-a755-ef5f44d4798a)
+
+Jika dibandingkan, 
+Ciphertext C1: 1dbc (biner 0001 1101 1011 1100)
+
+Ciphertext C2: e1a6 (biner 1110 0001 1010 0110)
+
+Lakukan XOR maka hasilnya: 1111 1100 0001 1010 
+
+Jika kita menghitung hasil pada XOR: 1+1+1+1 + 1+1+0+0 + 0+0+0+1 + 1+0+1+0 = 4 + 2 + 1 + 2 = 9 bit. Maka Testcase Avalanche berhasil karena 9/16 bit atau 56% output telah terubah hanya berdasarkan 1 perubahan input. 
+
 
 ### E. Analisis: kelebihan dan keterbatasan Mini-AES
 **Kelebihan**
